@@ -681,7 +681,119 @@ export function SmartifyStudentPortal() {
   
   return (
     <TooltipProvider>
-      <div className="flex h-screen bg-background">
+      <div className={cn(
+        "grid h-screen bg-background transition-all duration-300 ease-in-out",
+        isSidebarOpen ? "grid-cols-[256px,1fr]" : "grid-cols-[0px,1fr]"
+      )}>
+        {/* Replace the fixed sidebar with this */}
+        <div className={cn(
+          "overflow-hidden border-r bg-background transition-all duration-300",
+          isSidebarOpen ? "w-64" : "w-0"
+        )}>
+          <div className="w-64 p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Classes</h2>
+              <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <ScrollArea className="h-[calc(100vh-400px)]"> {/* Changed from -280px to -400px */}
+              {classes.map((classItem) => (
+                <Collapsible key={classItem.id} className="mb-2">
+                  <div className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md">
+                    <CollapsibleTrigger className="flex items-center text-left">
+                      <ChevronDown className="h-4 w-4 transition-transform duration-200 ease-in-out group-data-[state=open]:rotate-180 mr-2" />
+                      <span>{classItem.name}</span>
+                    </CollapsibleTrigger>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onSelect={() => handleClassAction('share', classItem.id)}>Share</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => handleClassAction('delete', classItem.id)}>Delete</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <CollapsibleContent className="pl-6 mt-1">
+                    {classItem.lectures.map((lecture) => (
+                      <div key={lecture.id} className="flex items-center justify-between p-2 hover:bg-accent rounded-md">
+                        <span>{lecture.name}</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem onSelect={() => handleLectureAction('share', classItem.id, lecture.id)}>Share</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleLectureAction('delete', classItem.id, lecture.id)}>Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        </div>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              ))}
+              {downloadedQuestionBanks.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-semibold mb-2">Downloaded Question Banks</h3>
+                  {downloadedQuestionBanks.map((bankId) => {
+                    const bank = publicQuestionBanks.find(b => b.id === bankId)
+                    if (!bank) return null
+                    return (
+                      <div key={bank.id} className="flex items-center justify-between p-2 hover:bg-accent rounded-md">
+                        <span className="flex items-center">
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          {bank.name}
+                        </span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem onSelect={() => handleQuestionBankAction('share', bank.id)}>Share</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleQuestionBankAction('delete', bank.id)}>Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </ScrollArea>
+            <Button className="w-full mt-4" variant="outline" onClick={handleQuestionBankClick}>
+              Question Bank
+            </Button>
+            <Button 
+              className="w-full mt-4" 
+              variant="outline" 
+              onClick={() => setIsStatsSidebarOpen(true)}
+            >
+              <BarChart className="mr-2 h-4 w-4" />
+              Statistics
+            </Button>
+
+            <Button className="w-full mt-4" variant="outline">
+              Shared
+            </Button>
+
+            <Button className="w-full mt-4" variant="outline" onClick={() => setIsAlertModalOpen(true)}>
+              <AlertTriangle className="mr-2 h-4 w-4" />
+              Alert
+            </Button>
+
+            <Button className="w-full mt-4" variant="outline" onClick={handleHomeClick}>
+              <Home className="mr-2 h-4 w-4" />
+              Home
+            </Button>
+          </div>
+        </div>
+
         <div className="flex-1 flex">
           {isQuestionBankView && (
             <aside className="w-20 border-r bg-muted/50">
@@ -716,9 +828,7 @@ export function SmartifyStudentPortal() {
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                   <Menu className="h-6 w-6" />
                 </Button>
-                <div className={`transition-opacity duration-200 ${isSidebarOpen ? 'opacity-0' : 'opacity-100'}`}>
-                  <span className="text-2xl font-bold text-primary">Smartify</span>
-                </div>
+                <span className="text-2xl font-bold text-primary">Smartify</span>
               </div>
               <div className="flex items-center space-x-4">
                 <Input
@@ -947,157 +1057,8 @@ export function SmartifyStudentPortal() {
             </main>
           </div>
         </div>
-        {/* Add Statistics Sidebar */}
-        <div 
-          className={`fixed inset-y-0 right-0 z-50 w-80 bg-background border-l transform transition-transform duration-300 ease-in-out ${
-            isStatsSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          <div className="h-full flex flex-col">
-            <div className="p-4 border-b">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Your Progress</h2>
-                <Button variant="ghost" size="icon" onClick={() => setIsStatsSidebarOpen(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4 space-y-4">
-                <StatItem 
-                  icon={<Zap className="h-4 w-4" />} 
-                  value={questionsStats.generated} 
-                  label="Questions Generated" 
-                />
-                <StatItem 
-                  icon={<BookOpen className="h-4 w-4" />} 
-                  value={questionsStats.answered} 
-                  label="Questions Completed" 
-                />
-                <StatItem 
-                  icon={<BarChart className="h-4 w-4" />} 
-                  value={questionsStats.correct} 
-                  label="Correct Answers" 
-                />
-                <StatItem 
-                  icon={<Flag className="h-4 w-4" />} 
-                  value={questionsStats.incorrect} 
-                  label="Areas for Growth" 
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Modify the existing sidebar content to add Statistics button */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-background border-r transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Classes</h2>
-              <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <ScrollArea className="h-[calc(100vh-400px)]"> {/* Changed from -280px to -400px */}
-              {classes.map((classItem) => (
-                <Collapsible key={classItem.id} className="mb-2">
-                  <div className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md">
-                    <CollapsibleTrigger className="flex items-center text-left">
-                      <ChevronDown className="h-4 w-4 transition-transform duration-200 ease-in-out group-data-[state=open]:rotate-180 mr-2" />
-                      <span>{classItem.name}</span>
-                    </CollapsibleTrigger>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onSelect={() => handleClassAction('share', classItem.id)}>Share</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => handleClassAction('delete', classItem.id)}>Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  <CollapsibleContent className="pl-6 mt-1">
-                    {classItem.lectures.map((lecture) => (
-                      <div key={lecture.id} className="flex items-center justify-between p-2 hover:bg-accent rounded-md">
-                        <span>{lecture.name}</span>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem onSelect={() => handleLectureAction('share', classItem.id, lecture.id)}>Share</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleLectureAction('delete', classItem.id, lecture.id)}>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        </div>
-                    ))}
-                  </CollapsibleContent>
-                </Collapsible>
-              ))}
-              {downloadedQuestionBanks.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-sm font-semibold mb-2">Downloaded Question Banks</h3>
-                  {downloadedQuestionBanks.map((bankId) => {
-                    const bank = publicQuestionBanks.find(b => b.id === bankId)
-                    if (!bank) return null
-                    return (
-                      <div key={bank.id} className="flex items-center justify-between p-2 hover:bg-accent rounded-md">
-                        <span className="flex items-center">
-                          <BookOpen className="h-4 w-4 mr-2" />
-                          {bank.name}
-                        </span>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem onSelect={() => handleQuestionBankAction('share', bank.id)}>Share</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleQuestionBankAction('delete', bank.id)}>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </ScrollArea>
-            <Button className="w-full mt-4" variant="outline" onClick={handleQuestionBankClick}>
-              Question Bank
-            </Button>
-            <Button 
-              className="w-full mt-4" 
-              variant="outline" 
-              onClick={() => setIsStatsSidebarOpen(true)}
-            >
-              <BarChart className="mr-2 h-4 w-4" />
-              Statistics
-            </Button>
-
-            <Button className="w-full mt-4" variant="outline">
-              Shared
-            </Button>
-
-            <Button className="w-full mt-4" variant="outline" onClick={() => setIsAlertModalOpen(true)}>
-              <AlertTriangle className="mr-2 h-4 w-4" />
-              Alert
-            </Button>
-
-            <Button className="w-full mt-4" variant="outline" onClick={handleHomeClick}>
-              <Home className="mr-2 h-4 w-4" />
-              Home
-            </Button>
-          </div>
-        </div>
       </div>
+      {/* ...existing dialogs and other components... */}
       <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
