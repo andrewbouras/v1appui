@@ -26,12 +26,18 @@ import { cn } from "@/lib/utils"
 const questions = [
   {
     id: 1,
-    question: "What is the capital of France?",
-    choices: ["London", "Berlin", "Paris", "Madrid", "Rome"],
-    correctAnswer: 2,
-    explanation: "Paris is the capital and most populous city of France.",
-    subject: "Geography",
-    difficulty: "Easy",
+    question: "A 28-year-old woman presents with recurring episodes of severe abdominal pain, peripheral neuropathy, and dark reddish urine. Her sister has similar symptoms and their mother died at a young age from liver cancer. Laboratory analysis shows elevated urinary porphobilinogen. Which of the following enzyme deficiencies is most likely responsible for this condition?",
+    choices: [
+      "δ-aminolevulinate synthase",
+      "Porphobilinogen deaminase",
+      "Uroporphyrinogen decarboxylase",
+      "Coproporphyrinogen oxidase",
+      "Protoporphyrinogen oxidase"
+    ],
+    correctAnswer: 1,
+    explanation: "This patient presents with classic symptoms of acute intermittent porphyria (AIP), which is characterized by:\n\n1. Acute attacks of abdominal pain\n2. Neurological symptoms (peripheral neuropathy)\n3. Dark/reddish urine due to porphobilin\n4. Family history (autosomal dominant inheritance)\n5. Elevated urinary porphobilinogen\n\nAIP is caused by a deficiency in porphobilinogen deaminase (PBGD), also known as hydroxymethylbilane synthase. This enzyme deficiency leads to:\n\n- Accumulation of upstream metabolites (ALA and porphobilinogen)\n- Neurological symptoms due to neurotoxic effects of these metabolites\n- Characteristic dark urine during attacks\n\nDifferential considerations:\n- δ-aminolevulinate synthase deficiency causes sideroblastic anemia\n- Uroporphyrinogen decarboxylase deficiency causes porphyria cutanea tarda\n- Coproporphyrinogen oxidase deficiency causes hereditary coproporphyria\n- Protoporphyrinogen oxidase deficiency causes variegate porphyria",
+    subject: "Biochemistry/Genetics",
+    difficulty: "Hard",
   },
   {
     id: 2,
@@ -156,20 +162,20 @@ const AccessLevelInfo = () => {
 
 export function SmartifyStudentPortal() {
   const [classes, setClasses] = React.useState([
-    { id: 1, name: 'Math 101', lectures: [
+    { id: 1, name: 'Anatomy', lectures: [
       { id: 1, name: 'Introduction to Algebra' },
       { id: 2, name: 'Linear Equations' },
       { id: 3, name: 'Quadratic Equations' }
     ]},
-    { id: 2, name: 'Biology 201', lectures: [
+    { id: 2, name: 'Hematology', lectures: [
       { id: 4, name: 'Cell Structure' },
       { id: 5, name: 'Photosynthesis' },
       { id: 6, name: 'Evolution' }
     ]},
-    { id: 3, name: 'History 301', lectures: [
-      { id: 7, name: 'Ancient Civilizations' },
-      { id: 8, name: 'Middle Ages' },
-      { id: 9, name: 'Modern History' }
+    { id: 3, name: 'Neurology', lectures: [
+      { id: 7, name: 'Midbrain' },
+      { id: 8, name: 'Pons' },
+      { id: 9, name: 'Medulla' }
     ]}
   ])
 
@@ -177,127 +183,127 @@ export function SmartifyStudentPortal() {
   const [publicQuestionBanks, setPublicQuestionBanks] = React.useState([
     { 
       id: 1, 
-      name: 'Math Practice Questions', 
-      description: 'A comprehensive collection of practice questions covering various mathematical topics, from basic algebra to advanced calculus.', 
-      category: 'math',
-      examType: 'General Math',
-      creator: 'Dr. Emily Mathison',
-      totalQuestions: 500,
-      difficulty: 'Mixed',
-      lastUpdated: '2023-05-15',
+      name: 'USMLE Step 1 Comprehensive', 
+      description: 'Complete question bank covering foundational sciences, organ systems, and pathology concepts tested on USMLE Step 1.', 
+      category: 'USMLE Step 1',
+      examType: 'USMLE',
+      creator: 'Dr. Sarah Chen, MD',
+      totalQuestions: 2500,
+      difficulty: 'Hard',
+      lastUpdated: '2023-12-15',
       exampleQuestions: [
         {
-          question: "What is the derivative of x^2?",
-          answer: "2x"
+          question: "A 45-year-old patient presents with café-au-lait spots and multiple neurofibromas. Which gene mutation is most likely responsible?",
+          answer: "NF1 gene mutation (Neurofibromatosis Type 1)"
         },
         {
-          question: "Solve for x: 2x + 5 = 13",
-          answer: "x = 4"
+          question: "What is the primary mechanism of action of beta-lactam antibiotics?",
+          answer: "Inhibition of bacterial cell wall synthesis by binding to penicillin-binding proteins (PBPs)"
         }
       ]
     },
     { 
       id: 2, 
-      name: 'Biology Flashcards', 
-      description: 'An extensive set of flashcards covering key Biology concepts, perfect for quick revision and memorization of important terms and processes.', 
-      category: 'biology',
-      examType: 'AP Biology',
-      creator: 'Prof. Sarah Green',
-      totalQuestions: 300,
-      difficulty: 'Medium',
-      lastUpdated: '2023-06-01',
+      name: 'USMLE Step 2 Comprehensive', 
+      description: 'Clinical knowledge question bank focusing on diagnosis, patient management, and clinical decision-making for Step 2 CK preparation.', 
+      category: 'USMLE Step 2',
+      examType: 'USMLE',
+      creator: 'Prof. James Miller, MD, PhD',
+      totalQuestions: 3000,
+      difficulty: 'Hard',
+      lastUpdated: '2023-11-30',
       exampleQuestions: [
         {
-          question: "What is the powerhouse of the cell?",
-          answer: "Mitochondria"
+          question: "A 56-year-old man presents with sudden onset chest pain radiating to the left arm. What is the most appropriate initial diagnostic test?",
+          answer: "12-lead ECG"
         },
         {
-          question: "Define photosynthesis",
-          answer: "The process by which plants use sunlight, water and carbon dioxide to produce oxygen and energy in the form of sugar"
+          question: "A 23-year-old female presents with fever, butterfly rash, and joint pain. Which autoantibody test is most specific for diagnosis?",
+          answer: "Anti-dsDNA antibodies"
         }
       ]
     },
     { 
       id: 3, 
-      name: 'History Timeline', 
-      description: 'An interactive timeline of major historical events, designed to help students visualize and remember key moments in world history.', 
-      category: 'history',
-      examType: 'World History',
-      creator: 'Dr. Michael Historian',
-      totalQuestions: 200,
-      difficulty: 'Hard',
-      lastUpdated: '2023-04-20',
+      name: 'Bugs & Drugs', 
+      description: 'Comprehensive review of medical microbiology and antimicrobial therapeutics, covering bacterial, viral, fungal pathogens and their treatments.', 
+      category: 'Microbiology/Pharmacology',
+      examType: 'Medical School',
+      creator: 'Dr. Robert Kumar, MD',
+      totalQuestions: 1500,
+      difficulty: 'Medium',
+      lastUpdated: '2023-12-01',
       exampleQuestions: [
         {
-          question: "In which year did World War II end?",
-          answer: "1945"
+          question: "Which antibiotic is the drug of choice for treating methicillin-resistant Staphylococcus aureus (MRSA)?",
+          answer: "Vancomycin"
         },
         {
-          question: "Who was the first President of the United States?",
-          answer: "George Washington"
+          question: "What is the mechanism of action of azithromycin?",
+          answer: "Inhibition of bacterial protein synthesis by binding to the 50S ribosomal subunit"
         }
       ]
     },
     { 
       id: 4, 
-      name: 'Algebra Mastery', 
-      description: 'Advanced algebra problems and solutions, designed to challenge students and prepare them for higher-level mathematics courses.', 
-      category: 'math',
-      examType: 'SAT Math',
-      creator: 'Prof. Alan Algebra',
-      totalQuestions: 400,
+      name: 'High Yield Cardiology', 
+      description: 'Focused cardiovascular system review covering cardiac physiology, pathology, pharmacology, and clinical presentations.', 
+      category: 'Cardiology',
+      examType: 'Medical School',
+      creator: 'Dr. Emily Rodriguez, MD, FACC',
+      totalQuestions: 800,
       difficulty: 'Hard',
-      lastUpdated: '2023-05-30',
+      lastUpdated: '2023-12-10',
       exampleQuestions: [
         {
-          question: "Solve the system of equations: 2x + y = 5, 3x - 2y = 4",
-          answer: "x = 2, y = 1"
+          question: "Which ECG finding is most specific for acute anterior wall MI?",
+          answer: "ST-segment elevation in V1-V4"
         },
         {
-          question: "Factor the expression: x^2 - 5x + 6",
-          answer: "(x - 2)(x - 3)"
+          question: "What is the most common cause of dilated cardiomyopathy?",
+          answer: "Idiopathic (although ischemic heart disease is the most common identifiable cause)"
         }
       ]
     },
     { 
       id: 5, 
-      name: 'Genetics Quiz', 
-      description: 'A comprehensive quiz covering various aspects of genetics, from basic concepts to advanced topics in molecular genetics.', 
-      category: 'biology',
-      examType: 'MCAT Biology',
-      creator: 'Dr. Gene Splitter',
-      totalQuestions: 250,
+      name: 'Heme/Lymph', 
+      description: 'Comprehensive coverage of hematology and lymphoid systems, including anemias, leukemias, lymphomas, and coagulation disorders.', 
+      category: 'Hematology',
+      examType: 'Medical School',
+      creator: 'Dr. Michael Chang, MD, PhD',
+      totalQuestions: 600,
       difficulty: 'Medium',
-      lastUpdated: '2023-06-10',
+      lastUpdated: '2023-11-15',
       exampleQuestions: [
         {
-          question: "What is the probability of two heterozygous parents (Aa) having a homozygous recessive child (aa)?",
-          answer: "25% or 1/4"
+          question: "What is the most common chromosomal abnormality in chronic myeloid leukemia (CML)?",
+          answer: "Philadelphia chromosome - t(9;22)"
         },
         {
-          question: "What is the function of mRNA in protein synthesis?",
-          answer: "mRNA carries the genetic information from DNA to the ribosomes for protein synthesis"
+          question: "Which iron study is most useful in diagnosing iron deficiency anemia?",
+          answer: "Serum ferritin"
         }
       ]
     },
     { 
       id: 6, 
-      name: 'World War II Facts', 
-      description: 'A comprehensive guide to World War II events, covering major battles, key figures, and the global impact of the war.', 
-      category: 'history',
-      examType: 'AP European History',
-      creator: 'Prof. Victoria Victory',
-      totalQuestions: 350,
-      difficulty: 'Medium',
-      lastUpdated: '2023-05-25',
+      name: 'Biochemistry & Genetics', 
+      description: 'In-depth review of medical biochemistry and genetics, focusing on metabolic pathways, inherited disorders, and molecular medicine.', 
+      category: 'Biochemistry/Genetics',
+      examType: 'Medical School',
+      creator: 'Dr. Lisa Wong, MD, PhD',
+      totalQuestions: 1200,
+      difficulty: 'Hard',
+      lastUpdated: '2023-12-05',
       exampleQuestions: [
         {
-          question: "Who were the main Axis powers in World War II?",
-          answer: "Germany, Italy, and Japan"
+          question: "Which enzyme deficiency results in Tay-Sachs disease?",
+          answer: "Hexosaminidase A"
         },
         {
-          question: "What was the code name for the Allied invasion of Normandy in 1944?",
-          answer: "Operation Overlord (or D-Day)"
+          question: "What is the rate-limiting enzyme in cholesterol synthesis?",
+          answer: "HMG-CoA reductase"
         }
       ]
     }
@@ -944,7 +950,28 @@ export function SmartifyStudentPortal() {
                             <h4 className="mb-2 font-semibold">
                               {selectedAnswer === currentQuestion.correctAnswer ? "Correct!" : "Incorrect"}
                             </h4>
-                            <p>{currentQuestion.explanation}</p>
+                            {currentQuestion.explanation.split('\n\n').map((paragraph, index) => {
+                              // Handle bullet points
+                              if (paragraph.includes('- ')) {
+                                const [title, ...points] = paragraph.split('\n- ')
+                                return (
+                                  <div key={index} className="mb-4">
+                                    {title && <p className="font-medium mb-2">{title}</p>}
+                                    <ul className="list-disc list-inside space-y-1">
+                                      {points.map((point, i) => (
+                                        <li key={i} className="text-sm">{point}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )
+                              }
+                              // Regular paragraphs
+                              return (
+                                <p key={index} className="mb-4 last:mb-0 text-sm">
+                                  {paragraph}
+                                </p>
+                              )
+                            })}
                           </div>
                         )}
                         <div className="mt-6 flex items-center justify-between">
