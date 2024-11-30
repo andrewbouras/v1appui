@@ -38,3 +38,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 git add .
 git commit -m "message"
 git push origin main
+
+git reset --hard origin/main

@@ -160,6 +160,49 @@ const AccessLevelInfo = () => {
   )
 }
 
+// Add this new component before SmartifyStudentPortal
+const StatsOverview = () => {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Study Progress</CardTitle>
+            <CardDescription>Last 30 days performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-48 flex items-center justify-center text-muted-foreground">
+              Progress Chart Placeholder
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Question Analysis</CardTitle>
+            <CardDescription>Performance by category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-48 flex items-center justify-center text-muted-foreground">
+              Analysis Chart Placeholder
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Study Time</CardTitle>
+            <CardDescription>Hours spent learning</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-48 flex items-center justify-center text-muted-foreground">
+              Time Chart Placeholder
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
 export function SmartifyStudentPortal() {
   const [classes, setClasses] = React.useState([
     { id: 1, name: 'Anatomy', lectures: [
@@ -799,10 +842,10 @@ export function SmartifyStudentPortal() {
             <Button className="w-full mt-4" variant="outline" onClick={handleQuestionBankClick}>
               Question Bank
             </Button>
+            
             <Button 
               className="w-full mt-4" 
               variant="outline" 
-              onClick={() => setIsStatsSidebarOpen(true)}
             >
               <BarChart className="mr-2 h-4 w-4" />
               Statistics
@@ -1072,46 +1115,78 @@ export function SmartifyStudentPortal() {
                     </Card>
                   </section>
                   <section>
-                    <h2 className="text-2xl font-semibold mb-4">Question Banks</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredQuestionBanks.map((bank) => (
-                        <Card key={bank.id} className="overflow-hidden transition-shadow hover:shadow-lg">
-                          <CardHeader>
-                            <CardTitle className="flex items-center justify-between">
-                              {bank.name}
-                              <span className={`text-xs font-normal px-2 py-1 rounded-full ${
-                                bank.category === 'math' ? 'bg-blue-100 text-blue-800' :
-                                bank.category === 'biology' ? 'bg-green-100 text-green-800' :
-                                'bg-yellow-100 text-yellow-800'
-                              }`}>
-                                {bank.category}
-                              </span>
-                            </CardTitle>
-                            <CardDescription>{bank.description}</CardDescription>
-                          </CardHeader>
-                          <CardFooter className="flex justify-between">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button 
-                                  onClick={() => handleDownloadQuestionBank(bank.id)}
-                                  variant={downloadedQuestionBanks.includes(bank.id) ? "secondary" : "default"}
-                                >
-                                  <Download className="mr-2 h-4 w-4" />
-                                  {downloadedQuestionBanks.includes(bank.id) ? "Downloaded" : "Download"}
+                    <Tabs defaultValue="questionBanks" className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <TabsList className="inline-flex h-auto p-1 bg-muted/50 rounded-xl">
+                          <TabsTrigger 
+                            value="questionBanks" 
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                          >
+                            <BookOpen className="mr-2 h-4 w-4" />
+                            Question Banks
+                          </TabsTrigger>
+                          <TabsTrigger 
+                            value="statistics" 
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                          >
+                            <BarChart className="mr-2 h-4 w-4" />
+                            Statistics
+                          </TabsTrigger>
+                        </TabsList>
+                      </div>
+                      
+                      <TabsContent 
+                        value="questionBanks" 
+                        className="space-y-4 transition-all transform data-[state=active]:translate-y-0 data-[state=inactive]:translate-y-4"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filteredQuestionBanks.map((bank) => (
+                            <Card key={bank.id} className="overflow-hidden transition-shadow hover:shadow-lg">
+                              <CardHeader>
+                                <CardTitle className="flex items-center justify-between">
+                                  {bank.name}
+                                  <span className={`text-xs font-normal px-2 py-1 rounded-full ${
+                                    bank.category === 'math' ? 'bg-blue-100 text-blue-800' :
+                                    bank.category === 'biology' ? 'bg-green-100 text-green-800' :
+                                    'bg-yellow-100 text-yellow-800'
+                                  }`}>
+                                    {bank.category}
+                                  </span>
+                                </CardTitle>
+                                <CardDescription>{bank.description}</CardDescription>
+                              </CardHeader>
+                              <CardFooter className="flex justify-between">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      onClick={() => handleDownloadQuestionBank(bank.id)}
+                                      variant={downloadedQuestionBanks.includes(bank.id) ? "secondary" : "default"}
+                                    >
+                                      <Download className="mr-2 h-4 w-4" />
+                                      {downloadedQuestionBanks.includes(bank.id) ? "Downloaded" : "Download"}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{downloadedQuestionBanks.includes(bank.id) ? "Question bank already downloaded" : "Download this question bank"}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Button variant="outline" onClick={() => handleViewQuestionBankDetails(bank.id)}>
+                                  <Info className="mr-2 h-4 w-4" />
+                                  View Details
                                 </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{downloadedQuestionBanks.includes(bank.id) ? "Question bank already downloaded" : "Download this question bank"}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                            <Button variant="outline" onClick={() => handleViewQuestionBankDetails(bank.id)}>
-                              <Info className="mr-2 h-4 w-4" />
-                              View Details
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      ))}
-                    </div>
+                              </CardFooter>
+                            </Card>
+                          ))}
+                        </div>
+                      </TabsContent>
+                      
+                      <TabsContent 
+                        value="statistics" 
+                        className="space-y-4 transition-all transform data-[state=active]:translate-y-0 data-[state=inactive]:translate-y-4"
+                      >
+                        <StatsOverview />
+                      </TabsContent>
+                    </Tabs>
                   </section>
                 </div>
               )}
