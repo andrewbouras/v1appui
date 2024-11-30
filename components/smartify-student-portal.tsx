@@ -842,14 +842,6 @@ export function SmartifyStudentPortal() {
             <Button className="w-full mt-4" variant="outline" onClick={handleQuestionBankClick}>
               Question Bank
             </Button>
-            
-            <Button 
-              className="w-full mt-4" 
-              variant="outline" 
-            >
-              <BarChart className="mr-2 h-4 w-4" />
-              Statistics
-            </Button>
 
             <Button 
               className="w-full mt-4" 
