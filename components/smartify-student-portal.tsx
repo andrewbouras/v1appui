@@ -830,11 +830,16 @@ export function SmartifyStudentPortal() {
           )}
           <div className="flex-1 flex flex-col">
             <header className="flex items-center justify-between p-4 border-b">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center">
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                   <Menu className="h-6 w-6" />
                 </Button>
-                <span className="text-2xl font-bold text-primary">Smartify</span>
+                <div 
+                  className="cursor-pointer" 
+                  onClick={handleHomeClick}
+                >
+                  <span className="text-2xl font-bold text-primary">Smartify</span>
+                </div>
               </div>
               <div className="flex items-center space-x-4">
                 <Input
