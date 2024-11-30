@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap } from 'lucide-react'
+import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap, Check, Copy } from 'lucide-react'
 import { subDays, format, eachDayOfInterval, startOfWeek, addWeeks, getMonth, getYear } from 'date-fns'
 import { useTheme } from "next-themes"
 import { Button } from '@/components/ui/button'
@@ -684,6 +684,30 @@ export function SmartifyStudentPortal() {
 
   // Add this new state near other useState declarations
   const [isAlertModalOpen, setIsAlertModalOpen] = React.useState(false)
+
+  // Add these new state variables after other state declarations
+  const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false)
+  const [inviteLinkCopied, setInviteLinkCopied] = React.useState(false)
+
+  // Add this new function after other function declarations
+  const handleCopyInviteLink = async () => {
+    const inviteLink = "https://smartify.edu/join/invite-" + Math.random().toString(36).substring(7)
+    try {
+      await navigator.clipboard.writeText(inviteLink)
+      setInviteLinkCopied(true)
+      toast({
+        title: "Invite Link Copied!",
+        description: "Share this link with your friends to invite them to Smartify.",
+      })
+      setTimeout(() => setInviteLinkCopied(false), 2000)
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Please try again or manually copy the link.",
+        variant: "destructive",
+      })
+    }
+  }
   
   return (
     <TooltipProvider>
@@ -784,8 +808,13 @@ export function SmartifyStudentPortal() {
               Statistics
             </Button>
 
-            <Button className="w-full mt-4" variant="outline">
-              Shared
+            <Button 
+              className="w-full mt-4" 
+              variant="outline" 
+              onClick={() => setIsInviteModalOpen(true)}
+            >
+              <User className="mr-2 h-4 w-4" />
+              Share App
             </Button>
 
             <Button className="w-full mt-4" variant="outline" onClick={() => setIsAlertModalOpen(true)}>
@@ -1408,6 +1437,47 @@ export function SmartifyStudentPortal() {
           </div>
           <DialogFooter>
             <Button onClick={handleGenerateLink}>Generate Link</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Invite Friends to Smartify</DialogTitle>
+            <DialogDescription>
+              Share Smartify with your friends and study together!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                <code className="text-sm">smartify.edu/join/invite-xxx</code>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="px-3"
+                  onClick={handleCopyInviteLink}
+                >
+                  {inviteLinkCopied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">Benefits for invited friends:</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Full access to question banks</li>
+                  <li>• Personalized study recommendations</li>
+                  <li>• Collaborative study groups</li>
+                  <li>• Progress tracking and analytics</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsInviteModalOpen(false)}>Done</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
