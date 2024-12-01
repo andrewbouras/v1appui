@@ -203,6 +203,14 @@ const StatsOverview = () => {
   )
 }
 
+// Add the filter options
+const filterOptions = [
+  { value: "all", label: "All Questions" },
+  { value: "flagged", label: "Flagged Questions" },
+  { value: "answered", label: "Answered Questions" },
+  { value: "unanswered", label: "Unanswered Questions" },
+]
+
 export function SmartifyStudentPortal() {
   const [classes, setClasses] = React.useState([
     { id: 1, name: 'Anatomy', lectures: [
@@ -751,6 +759,18 @@ export function SmartifyStudentPortal() {
       })
     }
   }
+
+  // Add this new state with your other state declarations
+  const [viewedQuestions, setViewedQuestions] = React.useState([])
+
+  // Update the question selection handler to track viewed questions
+  const handleQuestionSelect = (index) => {
+    setCurrentQuestionIndex(index)
+    setSelectedAnswer(null)
+    if (currentQuestion && !viewedQuestions.includes(currentQuestion.id)) {
+      setViewedQuestions(prev => [...prev, currentQuestion.id])
+    }
+  }
   
   return (
     <TooltipProvider>
@@ -874,17 +894,29 @@ export function SmartifyStudentPortal() {
                       key={q.id}
                       variant={index === currentQuestionIndex ? "secondary" : "ghost"}
                       className={cn(
-                        "mb-2 h-12 w-12 rounded-full p-0 relative",
-                        answeredQuestions.includes(q.id) ? "bg-muted text-muted-foreground" : "bg-background text-foreground"
+                        "mb-2 h-12 w-12 rounded-full p-0 relative transition-all duration-200",
+                        // Base styles - always transparent background
+                        "bg-transparent hover:bg-transparent",
+                        // Border styles based on state
+                        "border-2",
+                        // Current question styles - add subtle ring
+                        index === currentQuestionIndex && 
+                          "ring-2 ring-primary/20 ring-offset-2",
+                        // Answered question - black border
+                        answeredQuestions.includes(q.id) && 
+                          "border-foreground",
+                        // Viewed but not answered - gray border
+                        !answeredQuestions.includes(q.id) && viewedQuestions.includes(q.id) && 
+                          "border-muted-foreground",
+                        // Unviewed - white/subtle border
+                        !answeredQuestions.includes(q.id) && !viewedQuestions.includes(q.id) && 
+                          "border-border",
                       )}
-                      onClick={() => {
-                        setCurrentQuestionIndex(index)
-                        setSelectedAnswer(null)
-                      }}
+                      onClick={() => handleQuestionSelect(index)}
                     >
                       {index + 1}
                       {flaggedQuestions.includes(q.id) && (
-                        <Flag className="absolute -top-1 -right-1 h-4 w-4 text-red-500" />
+                        <Flag className="absolute -top-1 -right-1 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
                       )}
                     </Button>
                   ))}
@@ -914,26 +946,21 @@ export function SmartifyStudentPortal() {
                   className="w-64"
                 />
                 {isQuestionBankView && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">
-                        {filter === "all" ? "All Questions" :
-                          filter === "flagged" ? "Flagged Questions" :
-                          filter === "answered" ? "Answered Questions" :
-                          filter === "unanswered" ? "Unanswered Questions" :
-                          `${filter.charAt(0).toUpperCase() + filter.slice(1)} Difficulty`}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onSelect={() => setFilter("all")}>All Questions</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("flagged")}>Flagged Questions</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("answered")}>Answered Questions</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("unanswered")}>Unanswered Questions</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("easy")}>Easy Difficulty</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("medium")}>Medium Difficulty</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setFilter("hard")}>Hard Difficulty</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Select
+                    value={filter}
+                    onValueChange={(value) => setFilter(value)}
+                  >
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Filter questions..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border">
+                      {filterOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
                 <Sheet>
                   <SheetTrigger asChild>
@@ -981,7 +1008,17 @@ export function SmartifyStudentPortal() {
                       <Card className="relative">
                         <div className="p-6 pb-24"> {/* Add padding bottom to prevent content overlap with sticky buttons */}
                           <div className="mb-6">
-                            <h3 className="text-xl font-semibold mb-2">Question {currentQuestionIndex + 1}</h3>
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-xl font-semibold mb-2">Question {currentQuestionIndex + 1}</h3>
+                              <Button variant="ghost" onClick={toggleFlag}>
+                                {flaggedQuestions.includes(currentQuestion.id) ? (
+                                  <Flag className="h-5 w-5 text-red-500" />
+                                ) : (
+                                  <Flag className="h-5 w-5 text-muted-foreground" />
+                                )}
+                                <span className="sr-only">Flag Question</span>
+                              </Button>
+                            </div>
                             <p className="text-lg mb-4">{currentQuestion.question}</p>
                             <div className="space-y-4">
                               {currentQuestion.choices.map((choice, index) => (
