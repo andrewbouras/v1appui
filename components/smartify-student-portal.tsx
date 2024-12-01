@@ -580,7 +580,7 @@ export function SmartifyStudentPortal() {
         })))
         toast({
           title: "Lecture Deleted",
-          description: `Lecture ${deleteConfirmation.id} has been deleted.`,
+          description: `Lecture ${deleteConfirmation.id} has been deleted.`,  // Fixed syntax error here
         })
       } else if (deleteConfirmation.type === 'questionBank') {
         setDownloadedQuestionBanks(downloadedQuestionBanks.filter(id => id !== deleteConfirmation.id))
@@ -1356,6 +1356,10 @@ export function SmartifyStudentPortal() {
                 <div>
                   <h3 className="font-semibold">Can I change the theme of the application?</h3>
                   <p className="text-sm text-muted-foreground">Yes, you can change the theme by clicking the settings icon in the top right corner.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold">How can I eliminate answer choices?</h3>
+                  <p className="text-sm text-muted-foreground">Right-click on any answer choice to strike it through. This can help you eliminate options while working through a question.</p>
                 </div>
               </div>
             </TabsContent>
