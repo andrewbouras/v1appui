@@ -787,7 +787,21 @@ export function SmartifyStudentPortal() {
         : [...prev, index]
     )
   }
-  
+
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        handleNextQuestion();
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        handlePreviousQuestion();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleNextQuestion, handlePreviousQuestion]);
+
   return (
     <TooltipProvider>
       <div className={cn(
