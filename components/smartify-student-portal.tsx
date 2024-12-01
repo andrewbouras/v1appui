@@ -668,6 +668,7 @@ export function SmartifyStudentPortal() {
     if (currentQuestionIndex < filteredQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setSelectedAnswer(null)
+      setStruckThroughChoices([])
     }
   }
 
@@ -675,6 +676,7 @@ export function SmartifyStudentPortal() {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1)
       setSelectedAnswer(null)
+      setStruckThroughChoices([])
     }
   }
 
@@ -770,6 +772,20 @@ export function SmartifyStudentPortal() {
     if (currentQuestion && !viewedQuestions.includes(currentQuestion.id)) {
       setViewedQuestions(prev => [...prev, currentQuestion.id])
     }
+  }
+
+  // Add new state to track struck-through choices
+  const [struckThroughChoices, setStruckThroughChoices] = React.useState([])
+
+  // Add handler to toggle strikethrough on right-click
+  const handleStrikeThrough = (e, index) => {
+    e.preventDefault()
+    if (selectedAnswer !== null) return // Prevent changes after answering
+    setStruckThroughChoices(prev =>
+      prev.includes(index)
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    )
   }
   
   return (
@@ -1028,7 +1044,8 @@ export function SmartifyStudentPortal() {
                                     "h-auto w-full justify-start p-4 text-left text-foreground",
                                     selectedAnswer === index && "ring-2",
                                     selectedAnswer !== null && index === currentQuestion.correctAnswer && "ring-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 border-emerald-500/50",
-                                    selectedAnswer === index && index !== currentQuestion.correctAnswer && "ring-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-50 dark:hover:bg-orange-900/20 border-orange-500/50"
+                                    selectedAnswer === index && index !== currentQuestion.correctAnswer && "ring-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-50 dark:hover:bg-orange-900/20 border-orange-500/50",
+                                    struckThroughChoices.includes(index) && "line-through opacity-50"
                                   )}
                                   variant={
                                     selectedAnswer !== null
@@ -1040,6 +1057,7 @@ export function SmartifyStudentPortal() {
                                       : "outline"
                                   }
                                   onClick={() => handleAnswerSelect(index)}
+                                  onContextMenu={(e) => handleStrikeThrough(e, index)}
                                   disabled={selectedAnswer !== null}
                                 >
                                   <span className="mr-2 text-foreground">
