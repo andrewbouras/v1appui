@@ -1134,6 +1134,44 @@ export function SmartifyStudentPortal() {
                             </CardContent>
                           </Card>
                         )}
+
+                        {/* Add new navigation section */}
+                        <div className="flex justify-center items-center space-x-4 pt-4">
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={handlePreviousQuestion}
+                            disabled={currentQuestionIndex === 0}
+                            className="w-32 transition-all hover:translate-x-[-4px]"
+                          >
+                            <ChevronLeft className="mr-2 h-4 w-4" />
+                            Previous
+                          </Button>
+
+                          <Button
+                            variant={flaggedQuestions.includes(currentQuestion.id) ? "secondary" : "outline"}
+                            size="lg"
+                            onClick={toggleFlag}
+                            className="w-32 transition-colors"
+                          >
+                            <Flag className={cn(
+                              "mr-2 h-4 w-4",
+                              flaggedQuestions.includes(currentQuestion.id) && "fill-current"
+                            )} />
+                            {flaggedQuestions.includes(currentQuestion.id) ? "Flagged" : "Flag"}
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={handleNextQuestion}
+                            disabled={currentQuestionIndex === filteredQuestions.length - 1}
+                            className="w-32 transition-all hover:translate-x-[4px]"
+                          >
+                            Next
+                            <ChevronRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <Card className="p-6">
