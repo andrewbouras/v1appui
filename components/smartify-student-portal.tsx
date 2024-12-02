@@ -671,7 +671,7 @@ export function SmartifyStudentPortal() {
     if (currentQuestionIndex < filteredQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setSelectedAnswer(null)
-      setStruckThroughChoices([])
+      setStruckThroughChoices([]) // Reset struck-through choices
     }
   }
 
@@ -679,7 +679,7 @@ export function SmartifyStudentPortal() {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1)
       setSelectedAnswer(null)
-      setStruckThroughChoices([])
+      setStruckThroughChoices([]) // Reset struck-through choices
     }
   }
 
@@ -1082,8 +1082,9 @@ export function SmartifyStudentPortal() {
                             {currentQuestion.choices.map((choice, index) => {
                               const isSelected = selectedAnswer === index;
                               const isCorrect = index === currentQuestion.correctAnswer;
+                              const isStruckThrough = struckThroughChoices.includes(index);
                               
-                              let buttonStyle = "p-4 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer ";
+                              let buttonStyle = "p-4 rounded-lg transition-colors cursor-pointer ";
                               
                               if (selectedAnswer !== null) {
                                 if (isCorrect) {
@@ -1091,10 +1092,14 @@ export function SmartifyStudentPortal() {
                                 } else if (isSelected) {
                                   buttonStyle += "bg-red-100 hover:bg-red-200";
                                 } else {
-                                  buttonStyle += "bg-gray-100";
+                                  buttonStyle += "bg-gray-100 hover:bg-gray-200";
                                 }
                               } else {
-                                buttonStyle += "bg-gray-100";
+                                buttonStyle += "bg-gray-100 hover:bg-gray-200";
+                              }
+
+                              if (isStruckThrough) {
+                                buttonStyle += " line-through opacity-50";
                               }
 
                               return (
@@ -1102,6 +1107,7 @@ export function SmartifyStudentPortal() {
                                   key={index}
                                   className={buttonStyle}
                                   onClick={() => handleAnswerSelect(index)}
+                                  onContextMenu={(e) => handleStrikeThrough(e, index)}
                                 >
                                   {choice}
                                 </div>
