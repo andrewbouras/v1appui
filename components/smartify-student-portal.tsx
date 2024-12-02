@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap, Check, Copy, Minus } from 'lucide-react'
+import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap, Check, Copy, Minus, Share } from 'lucide-react'
 import { subDays, format, eachDayOfInterval, startOfWeek, addWeeks, getMonth, getYear } from 'date-fns'
 import { useTheme } from "next-themes"
 import { Button } from '@/components/ui/button'
@@ -212,6 +212,7 @@ const filterOptions = [
 ]
 
 export function SmartifyStudentPortal() {
+  
   const [classes, setClasses] = React.useState([
     { id: 1, name: 'Anatomy', lectures: [
       { id: 1, name: 'Introduction to Algebra' },
@@ -555,6 +556,7 @@ export function SmartifyStudentPortal() {
     }
   }
 
+
   // Add this function to handle the generate link action
   const handleGenerateLink = () => {
     toast({
@@ -802,6 +804,10 @@ export function SmartifyStudentPortal() {
     };
   }, [handleNextQuestion, handlePreviousQuestion]);
 
+  const handleSharedQuestionBankView = () => {
+    window.location.href = '/shared-question-bank'
+  }
+
   return (
     <TooltipProvider>
       <div className={cn(
@@ -891,6 +897,15 @@ export function SmartifyStudentPortal() {
             </ScrollArea>
             <Button className="w-full mt-4" variant="outline" onClick={handleQuestionBankClick}>
               Question Bank
+            </Button>
+
+            <Button 
+              className="w-full mt-4" 
+              variant="outline" 
+              onClick={handleSharedQuestionBankView}
+            >
+              <Share className="mr-2 h-4 w-4" />
+              Question Bank Shared View
             </Button>
 
             <Button 
@@ -1466,7 +1481,14 @@ export function SmartifyStudentPortal() {
               })()}
             </div>
           )}
-          <DialogFooter>
+          <DialogFooter className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              onClick={() => handleQuestionBankAction('share', selectedQuestionBank)}
+            >
+              <Share className="mr-2 h-4 w-4" />
+              Share
+            </Button>
             <Button onClick={() => setIsQuestionBankModalOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
