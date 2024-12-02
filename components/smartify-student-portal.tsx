@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import Link from 'next/link'
 
 // Mock data for questions
 const questions = [
@@ -804,8 +805,8 @@ export function SmartifyStudentPortal() {
     };
   }, [handleNextQuestion, handlePreviousQuestion]);
 
-  const handleSharedQuestionBankView = () => {
-    window.location.href = '/shared-question-bank'
+  const handleSharedQuestionBankView = (bankId, sharedBy) => {
+    router.push(`/shared-question-bank?bankId=${bankId}&sharedBy=${sharedBy}`)
   }
 
   return (
@@ -902,7 +903,7 @@ export function SmartifyStudentPortal() {
             <Button 
               className="w-full mt-4" 
               variant="outline" 
-              onClick={handleSharedQuestionBankView}
+              onClick={() => handleSharedQuestionBankView(sharedQuestionBank.id, sharedQuestionBank.creator)}
             >
               <Share className="mr-2 h-4 w-4" />
               Question Bank Shared View
@@ -1049,6 +1050,16 @@ export function SmartifyStudentPortal() {
                         </SelectContent>
                       </Select>
                     </div>
+                    <Button asChild>
+                      <Link href="/shared-class">
+                        1
+                      </Link>
+                    </Button>
+                    <Button asChild>
+                      <Link href="/shared-lecture">
+                        2
+                      </Link>
+                    </Button>
                   </SheetContent>
                 </Sheet>
               </div>
