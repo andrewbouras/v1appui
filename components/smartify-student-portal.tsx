@@ -1075,62 +1075,66 @@ export function SmartifyStudentPortal() {
                 <div className="space-y-8">
                   <section>
                     {currentQuestion ? (
-                      <Card className="w-full"> {/* Changed from max-w-3xl mx-auto */}
-                        <CardHeader>
-                          <CardTitle className="text-xl font-bold">Question {currentQuestionIndex + 1}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                          <p className="text-base whitespace-pre-line"> {/* Changed: removed max-w-[90ch], added whitespace-pre-line */}
-                            {currentQuestion.question}
-                          </p>
-                          
-                          <div className="space-y-3">
-                            {currentQuestion.choices.map((choice, index) => {
-                              const isSelected = selectedAnswer === index;
-                              const isCorrect = index === currentQuestion.correctAnswer;
-                              const isStruckThrough = struckThroughChoices.includes(index);
-                              
-                              let buttonStyle = "p-4 rounded-lg transition-colors cursor-pointer ";
-                              
-                              if (selectedAnswer !== null) {
-                                if (isCorrect) {
-                                  buttonStyle += "bg-green-100 hover:bg-green-200";
-                                } else if (isSelected) {
-                                  buttonStyle += "bg-red-100 hover:bg-red-200";
+                      <div className="space-y-6"> {/* Add spacing between cards */}
+                        <Card className="w-full shadow-md hover:shadow-lg transition-shadow">
+                          <CardHeader>
+                            <CardTitle className="text-xl font-bold">Question {currentQuestionIndex + 1}</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-6">
+                            <p className="text-base whitespace-pre-line"> {/* Changed: removed max-w-[90ch], added whitespace-pre-line */}
+                              {currentQuestion.question}
+                            </p>
+                            
+                            <div className="space-y-3">
+                              {currentQuestion.choices.map((choice, index) => {
+                                const isSelected = selectedAnswer === index;
+                                const isCorrect = index === currentQuestion.correctAnswer;
+                                const isStruckThrough = struckThroughChoices.includes(index);
+                                
+                                let buttonStyle = "p-4 rounded-lg transition-colors cursor-pointer ";
+                                
+                                if (selectedAnswer !== null) {
+                                  if (isCorrect) {
+                                    buttonStyle += "bg-green-100 hover:bg-green-200";
+                                  } else if (isSelected) {
+                                    buttonStyle += "bg-red-100 hover:bg-red-200";
+                                  } else {
+                                    buttonStyle += "bg-gray-100 hover:bg-gray-200";
+                                  }
                                 } else {
                                   buttonStyle += "bg-gray-100 hover:bg-gray-200";
                                 }
-                              } else {
-                                buttonStyle += "bg-gray-100 hover:bg-gray-200";
-                              }
 
-                              if (isStruckThrough) {
-                                buttonStyle += " line-through opacity-50";
-                              }
+                                if (isStruckThrough) {
+                                  buttonStyle += " line-through opacity-50";
+                                }
 
-                              return (
-                                <div
-                                  key={index}
-                                  className={buttonStyle}
-                                  onClick={() => handleAnswerSelect(index)}
-                                  onContextMenu={(e) => handleStrikeThrough(e, index)}
-                                >
-                                  {choice}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </CardContent>
-                        
+                                return (
+                                  <div
+                                    key={index}
+                                    className={buttonStyle}
+                                    onClick={() => handleAnswerSelect(index)}
+                                    onContextMenu={(e) => handleStrikeThrough(e, index)}
+                                  >
+                                    {choice}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </CardContent>
+                        </Card>
+
                         {selectedAnswer !== null && (
-                          <CardFooter className="flex flex-col items-start border-t p-6 mt-6">
-                            <h3 className="font-bold text-lg mb-2">Explanation</h3>
-                            <p className="text-gray-700 whitespace-pre-line"> {/* Changed: removed max-w-[90ch], added whitespace-pre-line */}
-                              {currentQuestion.explanation}
-                            </p>
-                          </CardFooter>
+                          <Card className="w-full shadow-md hover:shadow-lg transition-shadow">
+                            <CardContent className="p-6">
+                              <h3 className="font-bold text-lg mb-2">Explanation</h3>
+                              <p className="text-gray-700 whitespace-pre-line">
+                                {currentQuestion.explanation}
+                              </p>
+                            </CardContent>
+                          </Card>
                         )}
-                      </Card>
+                      </div>
                     ) : (
                       <Card className="p-6">
                         <p>No questions available for the current filter.</p>
