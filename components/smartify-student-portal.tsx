@@ -1064,120 +1064,60 @@ export function SmartifyStudentPortal() {
                 </Sheet>
               </div>
             </header>
-            <main className="flex-1 overflow-y-auto p-6">
+            <main className="flex-1 overflow-y-auto px-8 py-6"> {/* Changed from p-6 to px-8 py-6 */}
               {isQuestionBankView ? (
                 <div className="space-y-8">
                   <section>
-                    <h2 className="text-2xl font-semibold mb-4">Question Bank</h2>
                     {currentQuestion ? (
-                      <Card className="relative">
-                        <div className="p-6 pb-24"> {/* Add padding bottom to prevent content overlap with sticky buttons */}
-                          <div className="mb-6">
-                            <div className="flex items-center justify-between">
-                              <h3 className="text-xl font-semibold mb-2">Question {currentQuestionIndex + 1}</h3>
-                              <Button variant="ghost" onClick={toggleFlag}>
-                                {flaggedQuestions.includes(currentQuestion.id) ? (
-                                  <Flag className="h-5 w-5 text-red-500" />
-                                ) : (
-                                  <Flag className="h-5 w-5 text-muted-foreground" />
-                                )}
-                                <span className="sr-only">Flag Question</span>
-                              </Button>
-                            </div>
-                            <p className="text-lg mb-4">{currentQuestion.question}</p>
-                            <div className="space-y-4">
-                              {currentQuestion.choices.map((choice, index) => (
-                                <Button
-                                  key={index}
-                                  className={cn(
-                                    "h-auto w-full justify-start p-4 text-left text-foreground",
-                                    selectedAnswer === index && "ring-2",
-                                    selectedAnswer !== null && index === currentQuestion.correctAnswer && "ring-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 border-emerald-500/50",
-                                    selectedAnswer === index && index !== currentQuestion.correctAnswer && "ring-orange-500 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-50 dark:hover:bg-orange-900/20 border-orange-500/50",
-                                    struckThroughChoices.includes(index) && "line-through opacity-50"
-                                  )}
-                                  variant={
-                                    selectedAnswer !== null
-                                      ? index === currentQuestion.correctAnswer
-                                        ? "outline"
-                                        : selectedAnswer === index
-                                        ? "outline"
-                                        : "outline"
-                                      : "outline"
-                                  }
-                                  onClick={() => handleAnswerSelect(index)}
-                                  onContextMenu={(e) => handleStrikeThrough(e, index)}
-                                  disabled={selectedAnswer !== null}
-                                >
-                                  <span className="mr-2 text-foreground">
-                                    {String.fromCharCode(65 + index)}.
-                                  </span>
-                                  <span className="text-foreground">
-                                    {choice}
-                                  </span>
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                          {selectedAnswer !== null && (
-                            <div className={cn(
-                              "mt-6 rounded-lg p-4",
-                              selectedAnswer === currentQuestion.correctAnswer
-                                ? "bg-primary/5 border border-primary/10"
-                                : "bg-muted/50 border border-muted"
-                            )}>
-                              <h4 className={cn(
-                                "mb-2 font-semibold",
-                                selectedAnswer === currentQuestion.correctAnswer
-                                  ? "text-primary"
-                                  : "text-muted-foreground"
-                              )}>
-                                {selectedAnswer === currentQuestion.correctAnswer ? "Correct!" : "Incorrect"}
-                              </h4>
-                              {currentQuestion.explanation.split('\n\n').map((paragraph, index) => {
-                                // Handle bullet points
-                                if (paragraph.includes('- ')) {
-                                  const [title, ...points] = paragraph.split('\n- ')
-                                  return (
-                                    <div key={index} className="mb-4">
-                                      {title && <p className="font-medium mb-2">{title}</p>}
-                                      <ul className="list-disc list-inside space-y-1">
-                                        {points.map((point, i) => (
-                                          <li key={i} className="text-sm">{point}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )
+                      <Card className="w-full"> {/* Changed from max-w-3xl mx-auto */}
+                        <CardHeader>
+                          <CardTitle className="text-xl font-bold">Question {currentQuestionIndex + 1}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <p className="text-base whitespace-pre-line"> {/* Changed: removed max-w-[90ch], added whitespace-pre-line */}
+                            {currentQuestion.question}
+                          </p>
+                          
+                          <div className="space-y-3">
+                            {currentQuestion.choices.map((choice, index) => {
+                              const isSelected = selectedAnswer === index;
+                              const isCorrect = index === currentQuestion.correctAnswer;
+                              
+                              let buttonStyle = "p-4 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer ";
+                              
+                              if (selectedAnswer !== null) {
+                                if (isCorrect) {
+                                  buttonStyle += "bg-green-100 hover:bg-green-200";
+                                } else if (isSelected) {
+                                  buttonStyle += "bg-red-100 hover:bg-red-200";
+                                } else {
+                                  buttonStyle += "bg-gray-100";
                                 }
-                                // Regular paragraphs
-                                return (
-                                  <p key={index} className="mb-4 last:mb-0 text-sm">
-                                    {paragraph}
-                                  </p>
-                                )
-                              })}
-                            </div>
-                          )}
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 p-6 border-t bg-background">
-                          <div className="flex items-center justify-between">
-                            <Button onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0}>
-                              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                            </Button>
-                            <Button variant="outline" onClick={toggleFlag}>
-                              <Flag className="mr-2 h-4 w-4" />
-                              {flaggedQuestions.includes(currentQuestion.id) ? "Flagged" : "Flag"}
-                            </Button>
-                            <Button
-                              onClick={handleNextQuestion}
-                              disabled={
-                                currentQuestionIndex === filteredQuestions.length - 1 || selectedAnswer === null
+                              } else {
+                                buttonStyle += "bg-gray-100";
                               }
-                            >
-                              Next <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
+
+                              return (
+                                <div
+                                  key={index}
+                                  className={buttonStyle}
+                                  onClick={() => handleAnswerSelect(index)}
+                                >
+                                  {choice}
+                                </div>
+                              );
+                            })}
                           </div>
-                        </div>
+                        </CardContent>
+                        
+                        {selectedAnswer !== null && (
+                          <CardFooter className="flex flex-col items-start border-t p-6 mt-6">
+                            <h3 className="font-bold text-lg mb-2">Explanation</h3>
+                            <p className="text-gray-700 whitespace-pre-line"> {/* Changed: removed max-w-[90ch], added whitespace-pre-line */}
+                              {currentQuestion.explanation}
+                            </p>
+                          </CardFooter>
+                        )}
                       </Card>
                     ) : (
                       <Card className="p-6">
