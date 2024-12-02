@@ -972,7 +972,9 @@ export function SmartifyStudentPortal() {
                     >
                       {index + 1}
                       {flaggedQuestions.includes(q.id) && (
-                        <Flag className="absolute -top-1 -right-1 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
+                        <div className="absolute -top-1.5 -right-1.5">
+                          <Flag className="h-4 w-4 text-primary fill-primary" />
+                        </div>
                       )}
                     </Button>
                   ))}
