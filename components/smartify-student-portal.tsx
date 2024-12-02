@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap, Check, Copy } from 'lucide-react'
+import { Upload, Search, X, Menu, Download, MoreVertical, User, ChevronDown, Settings, Plus, ChevronLeft, ChevronRight, Flag, HelpCircle, Home, BookOpen, Info, AlertTriangle, BarChart, Calendar, Zap, Check, Copy, Minus } from 'lucide-react'
 import { subDays, format, eachDayOfInterval, startOfWeek, addWeeks, getMonth, getYear } from 'date-fns'
 import { useTheme } from "next-themes"
 import { Button } from '@/components/ui/button'
@@ -902,6 +902,15 @@ export function SmartifyStudentPortal() {
               Share App
             </Button>
 
+            <Button 
+              className="w-full mt-4" 
+              variant="outline" 
+              onClick={() => setIsUpgradeModalOpen(true)}
+            >
+              <Zap className="mr-2 h-4 w-4" />
+              Upgrade
+            </Button>
+
             <Button className="w-full mt-4" variant="outline" onClick={() => setIsAlertModalOpen(true)}>
               <AlertTriangle className="mr-2 h-4 w-4" />
               Alert
@@ -1525,17 +1534,87 @@ export function SmartifyStudentPortal() {
       <Dialog open={isUpgradeModalOpen} onOpenChange={setIsUpgradeModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upgrade Your Account</DialogTitle>
+            <DialogTitle>Choose Your MCQ Generation Plan</DialogTitle>
             <DialogDescription>
-              You've reached the maximum number of questions for your current plan. Upgrade now for unlimited access!
+              Unlock the power of unlimited question generation
             </DialogDescription>
           </DialogHeader>
-          <div className="flex items-center justify-center p-4">
-            <AlertTriangle className="h-12 w-12 text-yellow-500" />
+          <div className="flex flex-col md:flex-row gap-4 mt-4">
+            {/* Free Plan Card */}
+            <Card className="flex-1">
+              <CardHeader>
+                <CardTitle className="text-center text-xl font-bold">Free Plan</CardTitle>
+                <CardDescription className="text-center">Get started with basic features</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-center mt-4">
+                  <span className="text-4xl font-extrabold">$0</span>
+                  <span className="text-gray-500 ml-1">/month</span>
+                </div>
+                <ul className="mt-6 space-y-2">
+                  <li className="flex items-center">
+                    <Minus className="h-4 w-4 text-gray-500" />
+                    <span className="ml-2">Limited classes and lectures</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Minus className="h-4 w-4 text-gray-500" />
+                    <span className="ml-2">Basic MCQ generation</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Minus className="h-4 w-4 text-gray-500" />
+                    <span className="ml-2">Limited repeats</span>
+                  </li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button disabled variant="outline" className="w-full">Current Plan</Button>
+              </CardFooter>
+            </Card>
+            {/* Premium Plan Card */}
+            <Card className="flex-1 border border-primary">
+              <CardHeader>
+                <CardTitle className="text-center text-xl font-bold">Premium Plan</CardTitle>
+                <CardDescription className="text-center">Unlock unlimited potential</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-center mt-4">
+                  <span className="text-4xl font-extrabold">$30</span>
+                  <span className="text-gray-500 ml-1">/month</span>
+                </div>
+                <ul className="mt-6 space-y-2">
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span className="ml-2">Unlimited notes and chapters</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span className="ml-2">Unlimited MCQ generation</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span className="ml-2">Unlimited repeats</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span className="ml-2">Advanced features and priority support</span>
+                  </li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button asChild className="w-full">
+                  <a 
+                    href="https://checkout.stripe.com/c/pay/cs_test_a1a7wocDcONRWDAqOSj3uGsOcQdFa7tEOz36vTTH0DdNgA1uLKAbSxkt21#fidkdWxOYHwnPyd1blpxYHZxWjA0VXV%2FfGdMUTxwaXdcYHdjb0BkZE8wRlBRPWAzNG9yVW9qdFxjUEM1PTF8MnZrYmJTS2JSR19kZklhV1E1f21RdVF%2FQFJPTzx8a081aTJQc2QwSmFDcVNfNTVSQXcyMkZtMScpJ2hsYXYnP34nYnBsYSc%2FJ2c0M2M8Mjc3KDw0YzEoMTAwMCg8MjdgKGZkZjYxPGQ9PTVjZzdmNzU8ZicpJ2hwbGEnPyc1Yz00NWczMigzNT0yKDEzMzcoPDBhMCg1YWE2Zj0xMWQ0NmA0MGcyYGAnKSd2bGEnPydjZDUzNzxhNihkNjY9KDE0MzEoPDQzMChjPGRnPDxmZ2Y1PGFnMzExZzwneCknZ2BxZHYnP15YKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSd3YGNgd3dgd0p3bGJsayc%2FJ21xcXU%2FKippamZkaW1qdnE%2FNjU1NSd4JSUl" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    Join Premium for $30/month
+                  </a>
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsUpgradeModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleUpgrade}>Upgrade Now</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
