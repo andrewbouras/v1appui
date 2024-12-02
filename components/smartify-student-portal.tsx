@@ -212,6 +212,7 @@ const filterOptions = [
   { value: "unanswered", label: "Unanswered Questions" },
 ]
 
+// Add this new component after existing component declarations and before SmartifyStudentPortal
 export function SmartifyStudentPortal() {
   
   const [classes, setClasses] = React.useState([
@@ -941,8 +942,8 @@ export function SmartifyStudentPortal() {
 
         <div className="flex-1 flex">
           {isQuestionBankView && (
-            <aside className="w-20 border-r bg-muted/50">
-              <ScrollArea className="h-[calc(100vh-4rem)]">
+            <aside className="w-20 border-r bg-muted/50 flex flex-col">
+              <ScrollArea className="flex-1">
                 <div className="p-4">
                   {filteredQuestions.map((q, index) => (
                     <Button
@@ -977,6 +978,11 @@ export function SmartifyStudentPortal() {
                   ))}
                 </div>
               </ScrollArea>
+              <div className="p-2 border-t bg-background/50 backdrop-blur-sm text-center">
+                <div className="text-xs text-muted-foreground">
+                  {currentQuestionIndex + 1}/{filteredQuestions.length}
+                </div>
+              </div>
             </aside>
           )}
           <div className="flex-1 flex flex-col">
